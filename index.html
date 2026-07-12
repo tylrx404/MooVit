@@ -524,53 +524,12 @@
       document.body.style.overflow = menu.classList.contains('active') ? 'hidden' : 'auto';
     });
 
-    // --- Modal Logic ---
-    function closeAllModals() {
-      document.getElementById('overlay').classList.remove('active');
-      document.querySelectorAll('.service-alert, .login-modal, .signup-modal, .admin-modal').forEach(el => el.classList.remove('active'));
-      document.body.style.overflow = 'auto';
-    }
-    function handleServiceClick() {
-      document.getElementById('overlay').classList.add('active');
-      document.getElementById('serviceAlert').classList.add('active');
-      document.body.style.overflow = 'hidden';
-    }
-    function closeServiceAlert() { closeAllModals(); }
-
-    function openLoginPopup(event) {
-      if (event) event.preventDefault();
-
-  closeAllModals();
-
-  document.getElementById('overlay').classList.add('active');
-  document.getElementById('loginModal').classList.add('active');
-
-  document.body.style.overflow = 'hidden';
-    }
-    function closeLoginPopup() { closeAllModals(); }
-
-    function openSignupPopup(event) {
-      if (event) event.preventDefault();
-      closeAllModals();
-      document.getElementById('overlay').classList.add('active');
-      document.getElementById('signupModal').classList.add('active');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function openAdminPopup(event) {
-      if (event) event.preventDefault();
-      closeAllModals();
-      document.getElementById('overlay').classList.add('active');
-      document.getElementById('adminModal').classList.add('active');
-      document.body.style.overflow = 'hidden';
-    }
-
     // --- Backend Form Handling ---
     document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') {
-    closeAllModals();
-  }
-});
+      if (e.key === 'Escape') {
+        window.closeAllModals();
+      }
+    });
 
     // Login Validation
     const loginForm = document.getElementById('login-form-popup');
@@ -622,8 +581,8 @@
         submitBtn.textContent = 'Creating Account...';
         submitBtn.disabled = true;
         setTimeout(() => {
-          closeAllModals();
-          openLoginPopup();
+          window.closeAllModals();
+          window.openLoginPopup();
           document.getElementById('popup-error-msg').style.color = '#10b981';
           document.getElementById('popup-error-msg').textContent = 'Account created!';
         }, 1500);
@@ -643,7 +602,7 @@
           const submitBtn = this.querySelector('.admin-submit-btn');
           submitBtn.textContent = 'Accessing...';
           submitBtn.disabled = true;
-          setTimeout(() => { alert('Access Granted'); closeAllModals(); }, 1000);
+          setTimeout(() => { alert('Access Granted'); window.closeAllModals(); }, 1000);
         } else {
           errorMsg.textContent = 'Invalid Admin credentials.';
         }
