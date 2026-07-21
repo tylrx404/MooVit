@@ -14,10 +14,23 @@
     rel="stylesheet">
   <link rel="stylesheet" href="transport.css">
   <script>
-    (() => {
-      const savedTheme = localStorage.getItem('moovit-theme') || 'light';
-      document.documentElement.setAttribute('data-theme', savedTheme);
-    })();
+    function getStoredTheme(defaultTheme = 'light') {
+      try {
+        return localStorage.getItem('moovit-theme') || defaultTheme;
+      } catch {
+        return defaultTheme;
+      }
+    }
+
+    function setStoredTheme(theme) {
+      try {
+        localStorage.setItem('moovit-theme', theme);
+      } catch {
+        // Ignore storage failures gracefully
+      }
+    }
+
+    document.documentElement.setAttribute('data-theme', getStoredTheme());
   </script>
 </head>
 
@@ -461,11 +474,12 @@
     const root = document.documentElement;
     const body = document.body;
     const themeButtons = document.querySelectorAll('.theme-toggle');
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     function applyTheme(theme) {
       root.setAttribute('data-theme', theme);
       body.setAttribute('data-theme', theme);
-      localStorage.setItem('moovit-theme', theme);
+      setStoredTheme(theme);
 
       themeButtons.forEach(button => {
         const icon = button.querySelector('.theme-toggle-icon');
@@ -499,14 +513,16 @@
     //deleted
     // Particles
     const particles = document.getElementById('particles');
-    for (let i = 0; i < 40; i++) {
-      let p = document.createElement('div');
-      p.className = 'particle';
-      p.style.left = Math.random() * 100 + '%';
-      p.style.top = Math.random() * 100 + '%';
-      p.style.animationDelay = Math.random() * 5 + 's';
-      p.style.animationDuration = (Math.random() * 10 + 10) + 's';
-      particles.appendChild(p);
+    if (!prefersReducedMotion && particles) {
+      for (let i = 0; i < 40; i++) {
+        let p = document.createElement('div');
+        p.className = 'particle';
+        p.style.left = Math.random() * 100 + '%';
+        p.style.top = Math.random() * 100 + '%';
+        p.style.animationDelay = Math.random() * 5 + 's';
+        p.style.animationDuration = (Math.random() * 10 + 10) + 's';
+        particles.appendChild(p);
+      }
     }
 
     // Header Scroll

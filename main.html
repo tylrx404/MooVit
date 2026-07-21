@@ -964,8 +964,24 @@
             document.documentElement.setAttribute('data-theme', theme);
         }
 
+        function getStoredTheme(defaultTheme = 'light'){
+            try {
+                return localStorage.getItem(storageKey) || defaultTheme;
+            } catch {
+                return defaultTheme;
+            }
+        }
+
+        function setStoredTheme(theme){
+            try {
+                localStorage.setItem(storageKey, theme);
+            } catch {
+                // Ignore storage failures gracefully
+            }
+        }
+
         function init(){
-            let theme = localStorage.getItem(storageKey);
+            let theme = getStoredTheme();
             if(!theme){
                 theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
             }
@@ -973,7 +989,7 @@
             if(toggle){
                 toggle.addEventListener('click', function(){
                     const next = document.documentElement.classList.contains(lightClass) ? 'dark' : 'light';
-                    localStorage.setItem(storageKey, next);
+                    setStoredTheme(next);
                     applyTheme(next);
                 });
             }

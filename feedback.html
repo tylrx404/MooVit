@@ -8,10 +8,23 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="transport.css">
   <script>
-    (() => {
-      const savedTheme = localStorage.getItem('moovit-theme') || 'light';
-      document.documentElement.setAttribute('data-theme', savedTheme);
-    })();
+    function getStoredTheme(defaultTheme = 'light') {
+      try {
+        return localStorage.getItem('moovit-theme') || defaultTheme;
+      } catch {
+        return defaultTheme;
+      }
+    }
+
+    function setStoredTheme(theme) {
+      try {
+        localStorage.setItem('moovit-theme', theme);
+      } catch {
+        // Ignore storage failures gracefully
+      }
+    }
+
+    document.documentElement.setAttribute('data-theme', getStoredTheme());
   </script>
    <style>
     .feedback-section {
@@ -381,7 +394,7 @@
   function applyTheme(theme) {
     root.setAttribute("data-theme", theme);
     body.setAttribute("data-theme", theme);
-    localStorage.setItem("moovit-theme", theme);
+    setStoredTheme(theme);
 
     themeButtons.forEach((button) => {
       const icon = button.querySelector(".theme-toggle-icon");
